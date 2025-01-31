@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOG IN</title>
+    <link rel="stylesheet" href="./css/index.css">
+
+    <style>
+/*-----------*/
+body h1{
+  color: #101031  
+}
+
+form {
+  width: 375px;
+  height: 500px;
+  margin: auto;
+  margin-bottom: 50px;
+  text-align: center;
+  list-style: none;
+  padding: 10px 20px 10px 10px;
+  background:#ffffff;
+  border: 2px solid #61ca7a;
+  border-radius: 15px;
+  box-shadow: 0rem 0.3rem 1rem 0.1rem #aeaeae;
+}
+
+form p {
+  font-family: Segoe UI;
+  font-size: 15px;
+  color: #61ca7a;
+}
+
+form a {
+  text-decoration: none;
+}
+
+input { 
+  background: #f6f6f6;
+  display: block;
+  width: 300px;
+  padding: 20px;
+  margin: 10px;
+  font-family: Segoe UI;
+  font-size: 15px;
+  border: 2px solid #61ca7a;
+  border-radius: 5px;
+  color:black;
+}
+
+input:hover {
+  background: #eeeeef;
+}
+
+.sub {
+  background: #fff;
+  width: 200px;
+  padding: 12px;
+  font-family: Segoe UI;
+  font-weight: bold;
+  color: #61ca7a;
+  font-size: 18px;
+  border-radius: 5px;
+}
+.sub:hover {
+  background-color: #61ca7a;
+  color: #fff;
+}
+
+.sub:active {
+  border: 2px solid #fff;
+}
+.google{
+  &:hover{
+      background: red;;
+      color: rgb(255, 255, 255);
+  }
+}
+
+.facebook{
+  &:hover{
+      background: rgb(64, 19, 246);;
+      color: rgb(255, 255, 255);
+  }
+}
+
+.facebook ,.google{
+  background: #fff;
+  width: 200px;
+  padding: 12px;
+  font-family: Segoe UI;
+  font-weight: bold;
+  color: #61ca7a;
+  font-size: 18px;
+  border-radius: 5px;
+
+  
+  &:active{ border: 2px solid #fff;}
+}
+
+
+#footer {
+  text-align: center;
+  margin-top: 50px;
+  font-family: Segoe UI;
+}
+
+#footer a {
+  text-decoration: none;
+  font-family: Mistral;
+  font-size: 18px;
+  color: #105cb1;
+}
+    </style>
+</head>
+
+<body>
+
+    <%- include('../layout/header_unauth')%>
+
+<!-- Body start here  -->
+    <h1>TTS2811</h1>
+    
+    <form action="/login" method="post">
+        <h1 class="" style="display: flex; align-items:center; justify-content: center; color:#61ca7a">Log In </h1>
+        
+        <input id="useremail" name="username" type="text" placeholder="Username"/>
+        <input id="userpwd"  name="password" type="password" placeholder="Your password"/>
+        <input class="sub" type="submit" value="Log in"/>
+        <!-- 
+        <a href='/login/google'><input class="google" type="button" value="Google+"></a> 
+        <a href='/login/facebook'><input class="facebook" type="button" value="Facebook"></a>
+        -->
+        <li><a href="#"><p>Need help with password?</p></a></li>
+        <li><a href="/register"><p>Sign Up</p></a></li>
+    
+    </form>
+
+<script src="./js/event.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Tracking</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+<body>
+    <%- include('./layout/header_unauth')%>
+    <h1>Web Scraping Service</h1>	
+	<br>
+<form action="">
+	<label for="url">URL</label>
+	<input id="url" type="text" name="url" placeholder="url" required>
+<br>
+	<label for="item-name">Name</label>
+	<input id="name" type="text" name="name" placeholder="Item Name or Stock Name">
+<br>
+	<label for="price">Track Price</label>
+	<input id="price" type="text" name="price" placeholder="000">
+<br>
+	<label for="price">Track Price</label>
+	<input id="price" type="text" name="price" placeholder="000">
+<br>
+	<input id="price-drop" type="checkbox" name="drop">
+	<input id="price-rise" type="checkbox" name="rise">
+
+<br>
+	<label for="email">Your Email</label>
+	<input id="email" type="email" name="email" placeholder="abc@gmail.com" required>
+	<div class="block">
+		<button id="btn-save">Save</button>
+		<button id="btn-fetch">Fetch</button>
+	</div>
+</form>
+<br>
+
+<div class="container">
+	<div class="Columnar" id="d1">Div 1</div>
+	<div class="Columnar" id="d2">Div 2</div>
+	<div class="Columnar" id="d3">Div 3</div>
+	<div class="Columnar" id="d4">Div 4</div>
+	<div class="Columnar" id="d5">Div 5</div>
+</div>
+</body>
+</html>
