@@ -12,38 +12,24 @@
 
 <%- include('../layout/header_unauth')%>
 <!-- Body start here  -->
-    <div class="container">
-        <div class="logo">
-            <img src="https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg?w=740&t=st=1695405695~exp=1695406295~hmac=493a9afaee5605f37d99e542cbe462ea367f88d70fdd8fc28b9d2aeca456552b" 
-            id="top-img" style="width:20%; height:20%;"></img>
-        </div>
-
-        <div class="heading"><h1>CREATE ACCOUNT</h1></div>
+    
+    <form class="authenticate-form" action="/register" method="post" style="height: 600px;">
+        <h1 class="">Register</h1>
         
-        <div class="inside">
-            <form  id="the-form" action="/register" method="post" class="validate">
-                <label for="email" name="email"></label>
-                <input type="text" id="userinput" placeholder="Please enter email" 
-                   name="email" required/>
-                <label for="username" name="username"></label>
-                <input type="text" id="userinput" placeholder="Please enter user name" 
-                   name="username" required/>
-             <!-- END  -->
-                <div class="inside">
-                        <label for="pass" name="password"></label>
-                        <input name="password" type="password" id="pass" placeholder="New password" style='padding:auto; margin:0;'/>
-                        <label for="re-pass" name="userpwd"></label>
-                        <input name="userpwd" type="password" id="re-pass" placeholder="Confirm password" style='padding:auto; margin:0;'name="pass"/>
-                        <button type="submit" class="login"  id="btn" style="margin:10px 0;">SIGN UP</button>
-                        <div class="forget-pass">
-                            <a href="#">Forgot password?</a>
-                            <br>
-                            <a href="/login"> Back to Sign In</a>
-                        </div>
-                </div>
-            </form>
-        </div>
-    </div>
+        <input name="email" type="text" placeholder="abc@gmail.com" required/>
+        <input name="username" type="text" placeholder="New User Name"/>
+        <input name="password" type="password" placeholder="New Password"/>
+        <input name="userpwd" type="password" placeholder="Re-enter password"/>
+        <input class="sub" type="submit" value="Sign Up"/>
+        <!-- 
+        <a href='/login/google'><input class="google" type="button" value="Google+"></a> 
+        <a href='/login/facebook'><input class="facebook" type="button" value="Facebook"></a>
+        -->
+        <li><a href="#"><p>Need help with password?</p></a></li>
+        <li><a href="/login"><p>Already Have An Account</p></a></li>
+    
+    </form>
+
 
 
     
@@ -53,7 +39,7 @@
     document.addEventListener("DOMContentLoaded", () => {
     
         //check passworđ before submit!
-        document.getElementById('the-form').addEventListener('submit', function(event) {
+        document.querySelector('.authenticate-form').addEventListener('submit', function(event) {
             const password = document.getElementById('pass').value;
             const confirmPassword = document.getElementById('re-pass').value;
             if (password !== confirmPassword){

@@ -22,75 +22,7 @@
 .dark-theme input{
   background-color: #e8ffef;
 }
-.dark-theme form {
-  /* background-color:#e8ffef; */
-}
 
-.dark-theme body header nav .navbar form{background-color:#222 ;}
-
-
-.dark-theme body .container .inside form{
-  background-color: #333333;
-}
-.dark-theme body .container .inside form .inside .login {
-  --c: #E95A49; /* the color */
-  box-shadow: 0 0 0 .1em inset var(--c);
-  --_g: linear-gradient(var(--c) 0 0) no-repeat;
-  background:
-    var(--_g) calc(var(--_p, 0%) - 100%) 0%,
-    var(--_g) calc(200% - var(--_p, 0%)) 0%,
-    var(--_g) calc(var(--_p, 0%) - 100%) 100%,
-    var(--_g) calc(200% - var(--_p, 0%)) 100%;
-  background-size: 50.5% calc(var(--_p, 0%) / 2 + .5%);
-  outline-offset: .1em;
-  transition: background-size .4s, background-position 0s .4s;
-  font-family: system-ui, sans-serif;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-  color: wheat;
-}
-
-.dark-theme body .container .inside form .inside .login:hover {
-  --_p: 100%;
-  transition: background-position .4s, background-size 0s;
-}
-
-.dark-theme body .container .inside form .inside .login:active {
-  box-shadow: 0 0 9e9q inset #0009;
-  background-color: var(--c);
-  color: #fff;
-}
-
-/* Regular theme */
-/*body .container .inside form .inside .login {
-  --c: #229091; /* the color */
-  box-shadow: 0 0 0 .1em inset var(--c);
-  --_g: linear-gradient(var(--c) 0 0) no-repeat;
-  background:
-    var(--_g) calc(var(--_p, 0%) - 100%) 0%,
-    var(--_g) calc(200% - var(--_p, 0%)) 0%,
-    var(--_g) calc(var(--_p, 0%) - 100%) 100%,
-    var(--_g) calc(200% - var(--_p, 0%)) 100%;
-  background-size: 50.5% calc(var(--_p, 0%) / 2 + .5%);
-  outline-offset: .1em;
-  transition: background-size .4s, background-position 0s .4s;
-  font-family: system-ui, sans-serif;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-}
-
-body, .container .inside form .inside .login:hover {
-  --_p: 100%;
-  transition: background-position .4s, background-size 0s;
-}
-
-body .container .inside form .inside .login:active {
-  box-shadow: 0 0 9e9q inset #0009;
-  background-color: var(--c);
-  color: #fff;
-}*/
 
 
 a {
@@ -149,6 +81,77 @@ button:focus-visible {
   transition: 0.5s ease;
 }
 
+
+/*-----Log In + Sign Up Form------*/
+body h1{
+  color: #101031  
+}
+
+.authenticate-form {
+  width: 375px;
+/*  height: adjust in html;*/
+  margin: auto;
+  margin-bottom: 50px;
+  text-align: center;
+  list-style: none;
+  padding: 10px 20px 10px 10px;
+  background:#ffffff;
+  border: 2px solid #61ca7a;
+  border-radius: 15px;
+  box-shadow: 0rem 0.3rem 1rem 0.1rem #aeaeae;
+}
+
+.authenticate-form p {
+  font-family: Segoe UI;
+  font-size: 15px;
+  color: #61ca7a;
+}
+
+.authenticate-form a {
+  text-decoration: none;
+}
+.authenticate-form h1 {
+  display: flex; 
+  align-items:center; 
+  justify-content: center; 
+  color:#61ca7a
+}
+
+.authenticate-form input { 
+  background: #f6f6f6;
+  display: block;
+  width: 300px;
+  padding: 20px;
+  margin: 10px;
+  font-family: Segoe UI;
+  font-size: 15px;
+  border: 2px solid #61ca7a;
+  border-radius: 5px;
+  color:black;
+}
+
+.authenticate-form input:hover {
+  background: #eeeeef;
+}
+
+.sub {
+  background: #fff;
+  width: 200px;
+  padding: 12px;
+  font-family: Segoe UI;
+  font-weight: bold;
+  color: #61ca7a;
+  font-size: 18px;
+  border-radius: 5px;
+}
+.sub:hover {
+  background-color: #61ca7a;
+  color: #fff;
+}
+
+.sub:active {
+  border: 2px solid #fff;
+}
 
 
 /* sign-up form*/
@@ -229,7 +232,7 @@ button:focus-visible {
     }
   }
 
-  /* The slider */
+  /* header EJS */
   .switch {
     position: relative;
     display: inline-block;
@@ -292,35 +295,6 @@ button:focus-visible {
 }
 
 
-.inside form, .logo, h1{
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column; 
-	
-}
-
-#the-form{
-  padding: 10px ;
-  margin:10px
-}
-
-.inside form input{
-  display: flex;
-  border-radius: 0px;
-  border-color: #07070a;
-  color: rgba(#3d09da, .9);
-  padding: 8px 16px;
-  font-size: 16px;
-  margin: 16px;
-  /* outline: none; */
-}
-#ist,#sec,#third,#fourth,#fifth,#sixth{
-  background-color: #1f1f25;
-  color:wheat;
-}
-
-
 
 @media screen and (min-width: 851px){
   /*switch size*/
@@ -373,12 +347,6 @@ button:focus-visible {
     width: 80%;
     height: 80%;
   }
-  #userinput{
-    margin:10px 0;
-  }
-  .userInput{
-    margin:10px 0;
-  }
 
   body h1{
     font-size: 26px;
@@ -388,11 +356,6 @@ button:focus-visible {
     padding:8px 16px;
   }
 
-  body .inside form input{
-    padding: 6px 12px;
-    font-size: 16px;
-    margin: 10px;
-  }
 }
 
 @media screen and (min-width: 551px) and (max-width: 851px){
@@ -444,12 +407,6 @@ button:focus-visible {
     width: 75%;
     height: 75%;
   }
-  #userinput{
-    margin:8px 0;
-  }
-  .userInput{
-    margin:6px 0;
-  }
   body button{
     font-size: 12px;
     padding:6px 12px;
@@ -459,12 +416,7 @@ button:focus-visible {
   body h1{
     font-size: 22px;
   }
-  body .inside form input{
-    padding: 4px 6px;
-    font-size: 14px;
-    margin: 6px;
 
-  }
   body .forget-pass{
     font-size: 14px;
   }
@@ -520,13 +472,6 @@ button:focus-visible {
     width: 65%;
     height: 65%;
   }
-  #userinput{
-    margin:6px 0;
-  }
-  .userInput{
-    margin:4px 0;
-  }
-
   body button{
     font-size: 11px;
     padding:2px 2px;
@@ -534,19 +479,11 @@ button:focus-visible {
   body h1{
     font-size: 16px;
   }
-  body .inside form input{
-    padding: 2px 3px;
-    font-size: 14px;
-    margin: 3px;
-
-  }
   body .forget-pass{
     font-size: 12px;
   }
-  #ist,#sec,#third,#fourth,#fifth,#sixth{
-    width: 18px;
-    height:16px;
-  }
+
+
 }
 @media (max-width:380px){
   .nav-item:nth-child(4) {

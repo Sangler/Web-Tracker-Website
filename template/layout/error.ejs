@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERROR Page</title>
+<style type="text/css">
+  * {
+    transition: all 0.6s;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    color: #999;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+#main {
+    display: table;
+    width: 100%;
+    height: auto;
+    text-align: center;
+}
+
+.fof {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 20px;
+}
+
+.fof h1 {
+    font-size: 50px;
+    display: inline-block;
+    padding-right: 12px;
+    animation: type 0.5s alternate infinite;
+}
+
+
+/* Typing animation */
+@keyframes type {
+    from { box-shadow: inset -3px 0px 0px #999; }
+    to { box-shadow: inset -3px 0px 0px transparent; }
+}
+
+/* Large Screens (Desktops, Laptops) */
+@media screen and (min-width: 851px) {
+    body{color: #222}
+    @keyframes type {
+        from { box-shadow: inset -3px 0px 0px #222; }
+        to { box-shadow: inset -3px 0px 0px transparent; }
+    }
+    .fof h1 {
+        font-size: 60px;
+    }
+}
+
+/* Medium Screens (Tablets, Small Laptops) */
+@media screen and (min-width: 551px) and (max-width: 850px) {
+    .fof h1 {
+        font-size: 45px;
+    }
+}
+
+/* Small Screens (Mobile Devices) */
+@media screen and (max-width: 550px) {
+    body{color: #bbb;}
+    @keyframes type {
+        from { box-shadow: inset -3px 0px 0px #bbb; }
+        to { box-shadow: inset -3px 0px 0px transparent; }
+    }
+    .fof {
+        display: block;
+        padding: 10px;
+    }
+
+    .fof h1 {
+        font-size: 35px;
+        padding-right: 8px;
+    }
+}
+</style>
+
+</head>
+<body>
+
+</body>
+</html>
+<div id="main">
+<% if (typeof (data) !== "undefined" && data.message) { %>
+  <div class="fof">
+    <h1>ERROR</h1>
+    <h3><%= data.message %></h3>
+    <a href="/register"><button>BACK</button></a> 
+    <a href="/login"><button>Sign In</button></a>
+  </div>
+
+<% } else if (otpMsg && otpMsg.message) { %>
+  <div class="fof">
+    <h1>VERIFICATION FAIL :(</h1>
+    <h3><%= otpMsg.message %></h3>
+    <button onclick="window.history.back()">BACK</button>
+    <a href="/login"><button>Sign In</button></a>
+  </div>
+<% } %>
+      
+</div>
+

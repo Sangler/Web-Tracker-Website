@@ -5,22 +5,25 @@ const UserEmailSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
-  username: {
+  username:{
     type: String,
-    unique: true,
+    unique: true
   },
   password: {
     required: true,
-    type: String,
+    type: String
   },
   otp: {
-    type: String,
+    type: String 
+  },
+  otpExpiration:{
+    type: Date
   },
   verified: {
     type: Boolean,
-    default: false,
+    default: false
   },
 });
 

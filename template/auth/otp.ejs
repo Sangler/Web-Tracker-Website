@@ -3,79 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/otp.css" type="text/css">
+
     <link rel="stylesheet" href="../css/index.css" type="text/css">
     <title>OTP Page</title>
-    <style>
-
-h2 {
-    margin-bottom: 20px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* OTP input styles */
-.email-otp-container,.btn-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
- .email-otp-input {
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    font-size: 18px;
-    margin: 0 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.otp-input:focus, .email-otp-input:focus {
-    border-color: #007bff;
-}
-
-.email-otp {
-    margin-top: 25px;
-
-}
-/* Button styles */
-button {
-    margin-top: 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-    </style>
 </head>
 <body>
   <%- include('../layout/header_unauth')%>
   <h2>Email OTP</h2>
-  <form class="email-otp">
-
     <div class="email-otp-container">
         <!-- Six input fields for OTP digits -->
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1">
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1" disabled>
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1" disabled>
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1" disabled>
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1" disabled>
-        <input type="text" class="email-otp-input" pattern="\d" maxlength="1" disabled>
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1">
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1" disabled>
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1" disabled>
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1" disabled>
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1" disabled>
+        <input type="text" class="email-otp-input"  pattern="[0-9]" maxlength="1" disabled>
     </div>
-      <div class="btn-container">
-      <button type="button" id="verifyEmailOTP">VERIFY EMAIL</button>
+
+  <form action="/register/otp" method="post">
+    <div class="btn-container">
+      <input type="text" class="otp-code-holder" name="otp">
+      <!-- Verify OTP Button -->
+    <button type="submit" name="action" value="verify" id="verifyEmailOTP">VERIFY EMAIL</button>
+
+    <!-- Resend OTP Button -->
+    <button type="submit" name="action" value="resend">Resend</button>
     </div>
   </form>
 
@@ -87,32 +40,16 @@ button:hover {
   var emailOtpInputs = document.querySelectorAll(".email-otp-input");
   function setupOtpInputListeners(inputs) {
     inputs.forEach(function (input, index) {
-      input.addEventListener("paste", function (ev) {
-        var clip = ev.clipboardData.getData("text").trim();
-        if (!/^\d{6}$/.test(clip)) {
-          ev.preventDefault();
-          return;
-        }
-
-        var characters = clip.split("");
-        inputs.forEach(function (otpInput, i) {
-          otpInput.value = characters[i] || "";
-        });
+      input.addEventListener("paste", function (evt) {
 
         enableNextBox(inputs[0], 0);
         inputs[5].removeAttribute("disabled");
         inputs[5].focus();
-        updateOTPValue(inputs);
       });
 
       input.addEventListener("input", function () {
         var currentIndex = Array.from(inputs).indexOf(this);
         var inputValue = this.value.trim();
-
-        if (!/^\d$/.test(inputValue)) {
-          this.value = "";
-          return;
-        }
 
         if (inputValue && currentIndex < 5) {
           inputs[currentIndex + 1].removeAttribute("disabled");
@@ -123,43 +60,29 @@ button:hover {
           inputs[5].removeAttribute("disabled");
           inputs[5].focus();
         }
-
-        updateOTPValue(inputs);
       });
 
-      input.addEventListener("keydown", function (ev) {
+      input.addEventListener("keydown", function (evt) {
         var currentIndex = Array.from(inputs).indexOf(this);
 
-        if (!this.value && ev.key === "Backspace" && currentIndex > 0) {
+        if (!this.value && evt.key === "Backspace" && currentIndex > 0) {
           inputs[currentIndex - 1].focus();
         }
       });
     });
   }
 
-  function updateOTPValue(inputs) {
-    var otpValue = "";
-    inputs.forEach(function (input) {
-      otpValue += input.value;
-    });
-
-    if (inputs === otpInputs) {
-      document.getElementById("verificationCode").value = otpValue;
-    } else if (inputs === emailOtpInputs) {
-      document.getElementById("emailverificationCode").value = otpValue;
-    }
-  }
-
   // Setup listeners for OTP inputs
   setupOtpInputListeners(emailOtpInputs);
-
   // Add event listener for verify button
-  document.getElementById("verifyEmailOTP").addEventListener("click", function () {
-    var otpValue = document.getElementById("emailverificationCode").value;
-    alert("Submitted Email OTP: " + otpValue);
-    // Add your submit logic here
+  document.getElementById("verifyEmailOTP").addEventListener("click", function (evt) {
+    // Get all OTP input values
+    let otpInputs = document.querySelectorAll(".email-otp-input");
+    let otpValue = Array.from(otpInputs).map(input => input.value).join('');
+    // Optionally, set the hidden input field value before form submission
+    document.querySelector(".otp-code-holder").value = otpValue;
   });
-  emailOtpInputs[0].focus();
+
 
       });
 </script>

@@ -24,7 +24,7 @@ async function checkPrice(page) {
 
         if (currentPrice < 300) {
             console.log("BUY!!!! " + currentPrice);
-            sendNotification(currentPrice);
+            sendNotificatioication(currentPrice);
         }
     });
 }
@@ -38,13 +38,15 @@ async function startTracking() {
     job.start();
 }
 
-async function sendNotification(price) {
+async function sendNotificatioication(price) {
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'mail.gmx.com',
+      port: 587,
+      secure: true,
       auth: {
-        user: '*****@gmail.com',
-        pass: '*****'
+          user: 'webtracking@gmx.com',
+          pass: 'webscraping2025'
       }
     });
   
