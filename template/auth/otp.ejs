@@ -9,7 +9,7 @@
     <title>OTP Page</title>
 </head>
 <body>
-  <%- include('../layout/header_unauth')%>
+  <%- include('../layout/header')%>
   <h2>Email OTP</h2>
     <div class="email-otp-container">
         <!-- Six input fields for OTP digits -->
@@ -25,12 +25,12 @@
     <div class="btn-container">
       <input type="text" class="otp-code-holder" name="otp">
       <!-- Verify OTP Button -->
-    <button type="submit" name="action" value="verify" id="verifyEmailOTP">VERIFY EMAIL</button>
-
-    <!-- Resend OTP Button -->
-    <button type="submit" name="action" value="resend">Resend</button>
+      <button type="submit" name="action" value="verify" id="verifyEmailOTP">VERIFY EMAIL</button>
+      <!-- Resend OTP Button -->
+      <button type="submit" name="action" value="resend">Resend</button>
     </div>
   </form>
+  <%- include('../layout/footer')%>
 
   <script src="../js/event.js"></script>
 

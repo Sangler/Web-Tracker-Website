@@ -10,19 +10,20 @@ const keys = require('../utils/process-env.js');
 
 //Set up Nodemailer
 const nodemailer = require("nodemailer");
-const transporter = nodemailer.createTransport({
-  host: 'mail.gmx.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: keys.email.user,
-    pass: keys.email.pass
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+
 async function SendVerifiedCode(otpcode, email) {
+  const transporter = nodemailer.createTransport({
+    host: 'mail.gmx.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: keys.email.user,
+      pass: keys.email.pass
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
   try {
     const info = await transporter.sendMail({
       from: '"TRACKING SERVICE FROM" <webtracking@gmx.com>',
@@ -125,7 +126,7 @@ router.post('/register/otp',catchAsync(async (req,res)=>{
       IsUserEmail.verified = true;
       await IsUserEmail.save();
       req.session.user_id = IsUserEmail._id;
-      return res.redirect(`/tstrack/${IsUserEmail.username}`); // Redirect on success
+      return res.redirect(`/trackery/${IsUserEmail.username}`); // Redirect on success
     } else {
       const otpMsg = { message: "Invalid OTP Code" };
       return res.render('./layout/error.ejs', { otpMsg });
@@ -170,7 +171,8 @@ router.post('/login',catchAsync(async (req,res)=>{
 
   req.session.user_id = IsUserEmail._id;
   req.session.username = IsUserEmail.username;
-  res.redirect(`/tstrack/${IsUserEmail.username}`);
+  req.session.email = IsUserEmail.email;  
+  res.redirect(`/trackery/${IsUserEmail.email.split("@")[0]}`);
 }));
 
 

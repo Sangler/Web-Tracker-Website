@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Tracking</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+</head>
+<body>
+    <%- include('./layout/header')%>
+
+	<main class="main-container">
+		<form id="scraping-form" class="scraping-form" action="" method="post">
+  <% if ((itemprices && items) && (itemprices.length>0 && items.length>0) && (items != "undefined" && itemprices != "undefined")) { %>    
+    <div class="results">
+  <div class="divs">
+    <div class="name-elms">
+      <% items.forEach(function(item, index) { %>
+        <button type="button" class="btnName" data-index="<%= index %>">
+          <span><%= index + 1 %>. <%= item %></span>
+        </button>
+      <% }); %>
+    </div>
+
+    <div class="price-elms">
+      <% itemprices.forEach(function(price, index) { %>
+        <button type="button" class="btnPrice" data-index="<%= index %>">
+          <span><%= index + 1 %>. <%= price %></span>
+        </button>
+      <% }); %>
+    </div>
+  </div>
+</div>
+  <% } else if (itemprices != "undefined" && items == "undefined") { %>
+    <div class="results">
+      <div class="divs"> 
+        <div class="name-elms">
+          <h3>Cannot find element from your "ID" or Class"</h3>
+        </div>
+        <div class="price-elms">
+          <% if (itemprices.length === 1) { %>
+            <button type="button" class="btnPrice" data-index="0">
+              <span>Only 1 price: <%= itemprices[0] %></span>
+            </button>
+          <% } else { %>
+            <% for (let j = 0; j < itemprices.length; j++) { %>
+              <button type="button" class="btnPrice" data-index="<%= j %>">
+                <span><%= j + 1 %>. <%= itemprices[j] %></span>
+              </button>
+            <% } %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  <% } else if (itemprices == "undefined" && items != "undefined") { %>
+    <div class="results">
+      <div class="divs"> 
+        <div class="name-elms">
+          <% if (items.length === 1) { %>
+            <button type="button" class="btnName" data-index="0">
+              <span>Only 1 item: <%= items[0] %></span>
+            </button>
+          <% } else { %>
+            <% for (let i = 0; i < items.length; i++) { %>
+              <button type="button" class="btnName" data-index="<%= i %>">
+                <span><%= i + 1 %>. <%= items[i] %></span>
+              </button>
+            <% } %>
+          <% } %>
+        </div>
+        <div class="price-elms">
+          <h3>Cannot find element from your "ID" or Class"</h3>
+        </div>
+      </div>
+    </div>
+  <% } else if (itemprices == "undefined" && items == "undefined") { %>
+    <div class="results">
+      <div class="divs"> 
+        <div class="name-elms">
+          <h3>Cannot find element from your "ID" or Class"</h3>
+        </div>
+        <div class="price-elms">
+          <h3>Cannot find element from your "ID" or Class"</h3>
+        </div>
+      </div>
+    </div>
+  <% } %>
+  <div class="form-actions">
+    <button type="submit" id="btn-check" class="primary-button">Confirm my choice(s)</button>
+  </div>
+</form>
+
+	</main>
+
+
+    <main class="main-container sendEmail">
+        <h3 class="page-title">Sending Email Notification</h1>
+        <form id="scraping-form" class="scraping-form" action="" method="">
+            <div class="form-group">
+                <label for="url">Tracking Website Link</label>
+                <input id="url" type="text" name="url" placeholder="https://example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="text">Notification Email</label>
+                <input id="text" type="text" name="content" placeholder="The price is droping to blah blah blah..." required>
+            </div>
+
+            
+            <div class="form-group">
+                <label for="email">Notification Email</label>
+                <input id="email" type="email" name="email" value="<%= currentEmail %>" required disabled>
+            <!--  placeholder="your@email.com" -->
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="btn-check" class="primary-button">
+                    Send Email!
+                </button>
+            </div>
+        </form>
+    </main>
+
+		<%- include('./layout/footer')%>
+
+	<script src="/socket.io/socket.io.js"></script>
+
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+  const socket = io(); // Connect to WebSocket server
+  const userChannel = "priceUpdate-<%=currentUser%>";
+  // console.log(userChannel) socket.io channel
+  socket.on(userChannel, function (data) {
+    console.log('Received updated prices:', data);
+    
+    // Check that items and itemprices are valid arrays with at least one element
+    if (data.items && data.itemprices && data.items.length > 0 && data.itemprices.length > 0) {
+      // Update the innerHTML first
+      document.querySelector('.name-elms').innerHTML = data.items.map((item, index) =>
+        `<button type="button" class="btnName" data-index="${index}">
+           <span>${index + 1}. ${item}</span>
+         </button>`).join('');
+  
+      document.querySelector('.price-elms').innerHTML = data.itemprices.map((price, index) =>
+        `<button type="button" class="btnPrice" data-index="${index}">
+           <span>${index + 1}. ${price}</span>
+         </button>`).join('');
+  
+      // Attach click event listeners to the newly created buttons
+      document.querySelectorAll('.btnPrice').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.btnPrice').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+  
+      document.querySelectorAll('.btnName').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.btnName').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    } else {
+      // If either array is missing or empty, show fallback messages
+      document.querySelector('.name-elms').innerHTML = "<h3>Cannot find element from your 'ID' or Class</h3>";
+      document.querySelector('.price-elms').innerHTML = "<h3>Cannot find element from your 'ID' or Class</h3>";
+    }
+  });
+  
+  socket.on('connect', function () {
+    console.log("Connected to WebSocket server.");
+  });
+  
+  socket.on('disconnect', function () {
+    console.log("Disconnected from WebSocket server.");
+  });
+});
+</script>
+
+
+</body>
+</html>

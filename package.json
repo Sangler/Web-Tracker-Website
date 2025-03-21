@@ -10,14 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0",
+    "cron": "^3.5.0",
     "ejs-mate": "^4.0.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "method-override": "^3.0.0",
     "mongoose": "^8.9.3",
     "nodemailer": "^6.9.16",
+    "nodemon": "^3.1.9",
     "path": "^0.12.7",
     "puppeteer": "^23.11.1",
-    "sha256": "^0.2.0"
+    "sha256": "^0.2.0",
+    "socket.io": "^4.8.1"
   }
 }

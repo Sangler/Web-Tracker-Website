@@ -8,38 +8,95 @@
     <link rel="stylesheet" type="text/css" href="/css/index.css">
 </head>
 <body>
-    <%- include('./layout/header_unauth')%>
-    <h1>Web Scraping Service</h1>	
-	<br>
-<form action="">
-	<label for="url">URL</label>
-	<input id="url" type="text" name="url" placeholder="url" required>
-<br>
-	<label for="item-name">Name</label>
-	<input id="name" type="text" name="name" placeholder="Item or Stock Element">
-<br>
-	<label for="price">Track Price</label>
-	<input id="price" type="text" name="price" placeholder="Price Element">
-<br>
-	<input id="price-drop" type="checkbox" name="drop">
-	<input id="price-rise" type="checkbox" name="rise">
+    <%- include('./layout/header')%>
+    
+    <main class="main-container">
+        <h1 class="page-title">Web Scraping Service</h1>
 
-<br>
-	<label for="email">Your Email</label>
-	<input id="email" type="email" name="email" placeholder="abc@gmail.com" required>
-	<div class="block">
-		<button id="btn-save">Save</button>
-		<button id="btn-fetch">Fetch</button>
-	</div>
-</form>
-<br>
+        <form id="scraping-form" class="scraping-form" action="" method="post">
+            <div class="form-group">
+                <label for="url">Website URL</label>
+                <input id="url" type="text" name="url" placeholder="https://example.com" required>
+            </div>
 
-<div class="container">
-	<div class="Columnar" id="d1">Div 1</div>
-	<div class="Columnar" id="d2">Div 2</div>
-	<div class="Columnar" id="d3">Div 3</div>
-	<div class="Columnar" id="d4">Div 4</div>
-	<div class="Columnar" id="d5">Div 5</div>
-</div>
+            <div class="dropdown-group">
+                <div class="dropdown">
+                    <button type="button" class="dropbtn name">
+                        Name Element Settings
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+
+
+                    <div id="nameDropdown" class="dropdown-content show">
+                        <div class="dropdown-inner">
+                            <select id="option-name" name="optionName" required>
+                                <option value="" disabled selected>Element Type</option>
+                                <option value="id">ID</option>
+                                <option value="class">Class</option>
+                            </select>
+                            <input id="name" type="text" name="name" placeholder="Item/Stock Element">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button type="button" class="dropbtn price">
+                        Price Element Settings
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div id="priceDropdown" class="dropdown-content show">
+                        <div class="dropdown-inner">
+                            <select id="option-price" name="optionPrice" required>
+                                <option value="" disabled selected>Element Type</option>
+                                <option value="id">ID</option> 
+                                <option value="class">Class</option>
+                            </select>
+                            <input id="price" type="text" name="price" placeholder="Price Element">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-settings">
+                <div class="alert-option">
+                    <div class="checkbox-group">
+                        <div class="squaredThree">
+                            <input type="checkbox" id="price-drop" name="drop">
+                            <label for="price-drop"></label>
+                        </div>
+                        <label for="price-drop">Notify when price drops below:</label>
+                        <input type="number" id="drop-input" name="userDropOutput">
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <div class="squaredThree">
+                            <input type="checkbox" id="price-rise" name="rise">
+                            <label for="price-rise"></label>
+                        </div>
+                        <label for="price-rise">Notify when price rises above:</label>
+                        <input type="number" id="rise-input" name="userRiseOutput">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Notification Email</label>
+                <input id="email" type="email" name="email" value="<%= currentEmail %>" required disabled>
+            <!--  placeholder="your@email.com" -->
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="btn-check" class="primary-button">
+                    Start Tracking
+                </button>
+            </div>
+        </form>
+    </main>
+
+
+
+    <%- include('./layout/footer')%>
+
+    <script src="/js/index.js"></script>
 </body>
 </html>

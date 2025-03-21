@@ -24,7 +24,7 @@ body {
     text-align: center;
 }
 
-#main {
+#main-err {
     display: table;
     width: 100%;
     height: auto;
@@ -91,26 +91,26 @@ body {
 
 </head>
 <body>
+    <div id="main-err">
+    <% if (typeof (data) !== "undefined" && data.message) { %>
+      <div class="fof">
+        <h1>ERROR</h1>
+        <h3><%= data.message %></h3>
+        <a href="/register"><button>BACK</button></a> 
+        <a href="/login"><button>Sign In</button></a>
+      </div>
+
+    <% } else if (otpMsg && otpMsg.message) { %>
+      <div class="fof">
+        <h1>VERIFICATION FAIL :(</h1>
+        <h3><%= otpMsg.message %></h3>
+        <button onclick="window.history.back()">BACK</button>
+        <a href="/login"><button>Sign In</button></a>
+      </div>
+    <% } %>
+          
+    </div>
 
 </body>
 </html>
-<div id="main">
-<% if (typeof (data) !== "undefined" && data.message) { %>
-  <div class="fof">
-    <h1>ERROR</h1>
-    <h3><%= data.message %></h3>
-    <a href="/register"><button>BACK</button></a> 
-    <a href="/login"><button>Sign In</button></a>
-  </div>
-
-<% } else if (otpMsg && otpMsg.message) { %>
-  <div class="fof">
-    <h1>VERIFICATION FAIL :(</h1>
-    <h3><%= otpMsg.message %></h3>
-    <button onclick="window.history.back()">BACK</button>
-    <a href="/login"><button>Sign In</button></a>
-  </div>
-<% } %>
-      
-</div>
 
