@@ -265,7 +265,6 @@ module.exports = {
 	escapeCssSelector,
 	checkPrice,
   sendNotification,
-  parseCurrency,
   generateJobID
   };
 
