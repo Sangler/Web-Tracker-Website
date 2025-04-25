@@ -6,3 +6,5 @@ External References:
 - https://codepen.io/ahmedelmsery/pen/zZVLMN used for tracking page 
 - https://www.w3schools.com/css/css_tooltip.asp used for tool-tip feature
 - https://github.com/tombaranowicz/AmazonPricesMonitoring/blob/master/index.js: re-build from the idea
+
+Database: MongoDB, implementing Mongoose package to connect with server 
