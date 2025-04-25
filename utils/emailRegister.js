@@ -1,5 +1,5 @@
 module.exports = (req, res, next)=>{
-  if (req.session.emailStatus==true){
+  if (req.session.email){
     return next();
   }
 
@@ -9,5 +9,5 @@ module.exports = (req, res, next)=>{
     return next();
   }...
   */
-  res.redirect('/register/otp')
+  res.redirect('/login')
 };

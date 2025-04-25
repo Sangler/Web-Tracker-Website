@@ -1,0 +1,368 @@
+<!DOCTYPE
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebScrapingProject</title>    
+    <!-- <link rel="stylesheet" type="text/css" href="/css/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon_io/favicon.ico">
+<style type="text/css">
+    /* Main Content Styling */
+    main {
+        padding: 2rem 0;
+    }
+
+    /* Hero Section */
+ .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1px auto 1px auto;
+    min-height: 80vh;
+    align-items: center;
+    background: #f8f9e9;
+}
+
+.hero h1 {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 3.5rem;
+    padding-right: 2rem;
+}
+
+.hero hr {
+    grid-column: 1 / -1;
+    background: #ddd;
+    border: none;
+    height: 1px;
+    margin: 2rem 0;
+}
+
+.hero hr:nth-of-type(1) {
+    grid-row: 2;
+}
+
+.hero p {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 1.5rem;
+    padding-right: 2rem;
+}
+
+.hero hr:nth-of-type(2) {
+    grid-row: 4;
+}
+
+.hero button {
+    grid-column: 1;
+    grid-row: 5;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.hero img {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+    .hero button:hover {
+        transform: translateY(-3px);
+        background: #0056b3;
+    }
+
+    /* Products Section */
+    .products {
+        padding: 4rem 2rem;
+        background: white;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .product {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .product:hover {
+        transform: translateY(-5px);
+    }
+
+    .product img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .product h3 {
+        padding: 1rem;
+        margin: 0;
+        color: #333;
+    }
+
+    .description {
+        padding: 0 1rem 1rem;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .product button {
+        width: 100%;
+        padding: 0.8rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    /* Services Section */
+    .services {
+        padding: 4rem 2rem;
+        background: #f8f9fa;
+    }
+
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .service {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .service:hover {
+        transform: translateY(-5px);
+    }
+
+    .service img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    /* About Section */
+    .about {
+        padding: 4rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .about h2 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .about img {
+        flex: 1;
+        min-width: 300px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .about div {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease;
+    }
+
+    .scroll-reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+        }
+        
+        .about {
+            flex-direction: column;
+        }
+    }
+</style>
+
+</head>
+<body>
+<!--     <header>
+    
+        <div class="logo">
+            <a href="/">
+                <svg viewBox="28 20 144 160" width="200" height="200">
+                    <path fill="#070812" d="M160.543 20.971c-23.288-.149-46.578-.373-69.866-.597-15.501-.15-31.077-.299-46.579-.374-5.393 0-6.59 1.12-6.964 6.272-.374 4.928-.674 9.781-.748 14.709-.077 5.301 1.871 7.019 7.338 7.914 11.075 1.755 22.713 2.243 32.967 6.119a46.75 46.75 0 0 0 3.277 1.787c7.227 3.535 11.073 11.359 10.642 18.951-2.026-.019-4.051-.032-6.077-.052-15.501-.15-31.077-.299-46.576-.373-5.393 0-6.592 1.12-6.967 6.272-.374 4.928-.674 9.781-.748 14.709-.074 5.301 1.874 7.018 7.338 7.914 11.308 1.792 23.216 2.24 33.625 6.346 1.272.5 2.536.932 3.795 1.32 3.095 2.708 5.62 6.063 7.142 10.095 1.497 4.106 2.319 8.512 2.022 13.141H28.149l-.149.075c4.119 11.648 8.086 22.549 17.747 29.866 24.039 18.143 49.349 17.023 77.433 10.901 17.821-3.883 32.948-8.736 41.486-26.506 1.871-3.957 2.545-8.586 4.119-13.887H115.99c.897-10.005 9.66-24.34 19.543-26.804 2.149-.544 3.448-1.067 4.323-1.575 5.992-1.775 12.244-3.04 18.288-4.688 5.318-1.493 7.489-3.733 7.715-9.109v-5.749c0-9.183-2.174-11.349-11.457-11.349-12.203-.078-24.405-.204-36.607-.313l-1.208-1.339c.825-10.901 9.363-17.621 19.023-21.204a41.658 41.658 0 0 0 3.564-1.554c7.97-2.701 16.767-2.435 25.113-4.71 5.316-1.493 7.489-3.733 7.712-9.109v-5.749c.001-9.185-2.17-11.35-11.456-11.35z"/>
+                </svg>
+                <span>WebScrapingProject</span>
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/book-online">Book Online</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/shop">Shop</a></li>
+            </ul>
+        </nav>
+    </header> -->
+    <%- include('./layout/header')%>
+
+    <main>
+        <section class="hero">
+            <h1>Data Mastery Unleashed</h1>
+            <p>Empowering Data Analysis and Insights</p>
+            <button>Explore More</button>
+            <img src="/imgs/mainpage/45d55574-77c7-4ce1-973f-9cda327eb4df.png" alt="Data analysis tools">
+        </section>
+
+        <section class="products">
+            <h2>Solutions</h2>
+            <div class="product-grid">
+                <!-- Repeat for each product -->
+                <article class="product">
+                    <img src="stock-monitor.png" alt="Stock Monitor">
+                    <h3>Prices Monitor Function</h3>
+                    <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <button>Add to Cart</button>
+                </article>
+                <!-- Other products... -->
+            </div>
+        </section>
+
+        <section class="services">
+            <h2>Services</h2>
+            <div class="service-grid">
+                <!-- Repeat for each service -->
+                <article class="service">
+                    <img src="data-manipulation.jpg" alt="Data Manipulation">
+                    <h3>Data Manipulation</h3>
+                    <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <button>View Course</button>
+                </article>
+                <!-- Other services... -->
+            </div>
+        </section>
+
+        <section class="about">
+            <h2>About</h2>
+            <p>Our Story</p>
+            <p>WebScrapingProject, a revolutionary tool born out of an IT class...</p>
+            <button>Discover More</button>
+            <img src="team-photo.jpg" alt="Our team">
+        </section>
+    </main>
+
+
+        <%- include('./layout/footer')%>
+
+
+<script type="text/javascript">
+    // Scroll Reveal Animation
+    const scrollReveal = () => {
+        const elements = document.querySelectorAll('.scroll-reveal');
+        elements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('active');
+            }
+        });
+    }
+
+    // Initialize scroll reveal on load
+    window.addEventListener('load', () => {
+        document.querySelectorAll('.product, .service, .about div')
+                .forEach(el => el.classList.add('scroll-reveal'));
+        scrollReveal();
+    });
+
+    // Add scroll event listener
+    window.addEventListener('scroll', scrollReveal);
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Button hover effects
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('mouseover', () => {
+            button.style.transform = 'scale(1.05)';
+        });
+        
+        button.addEventListener('mouseout', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
+</script>
+
+<script src="/js/event.js"></script>
+<script src="/js/event.js" ></script>
+
+</body>
+</html>

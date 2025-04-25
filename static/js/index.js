@@ -1,29 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Toggle inputs based on checkbox selection
-    const dropCheckbox = document.getElementById("price-drop");
-    const riseCheckbox = document.getElementById("price-rise");
-    const dropInput = document.getElementById("drop-input");
-    const riseInput = document.getElementById("rise-input");
 
-    function toggleInputs(event) {
-        if (event.target === dropCheckbox) {
-            riseCheckbox.checked = false; // Uncheck "Rise to"
-            dropInput.style.display = dropCheckbox.checked ? "inline-block" : "none";
-            riseInput.style.display = "none";
-        } else if (event.target === riseCheckbox) {
-            dropCheckbox.checked = false; // Uncheck "Drop to"
-            riseInput.style.display = riseCheckbox.checked ? "inline-block" : "none";
-            dropInput.style.display = "none";
-        }
-    }
-
-    dropCheckbox.addEventListener("change", toggleInputs);
-    riseCheckbox.addEventListener("change", toggleInputs);
-
-    // Hide inputs initially
-    dropInput.style.display = "none";
-    riseInput.style.display = "none";
+    /* Toggle inputs based on checkbox selection */
 
    
 
@@ -41,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         document.getElementById('name').disabled=false;
         nameDropdown.classList.add('show');
+        
       }
     });
     
@@ -53,8 +32,45 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         document.getElementById('price').disabled=false;
         priceDropdown.classList.add('show');
+
       }
     });
+
+
+    const dropdownInners = document.querySelectorAll('.dropdown-inner');
+
+    dropdownInners.forEach(function(inner) {
+      const addBtn = inner.querySelector('.add-input');
+      const removeBtn = inner.querySelector('.remove-input');
+      const container = inner.querySelector('.dynamic-inputs-container');
+
+      // Determine the type from the data attribute (either 'name' or 'price')
+      const type = inner.dataset.type;
+
+      addBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        // Create a new input field
+        const newInput = document.createElement('input');
+        newInput.type = "text";
+        newInput.placeholder = "HTML Element Name";
+        // Set the name attribute based on the type for separation
+        if (type === "name") {
+          newInput.setAttribute("name", "listOfNames[]");
+        } else if (type === "price") {
+          newInput.setAttribute("name", "listOfPrices[]");
+        }
+        container.appendChild(newInput);
+      });
+
+      removeBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        // Remove the last input field, if one exists
+        if (container.lastElementChild) {
+          container.removeChild(container.lastElementChild);
+        }
+      });
+    });
+
 
  
 })

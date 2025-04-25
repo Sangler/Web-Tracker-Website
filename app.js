@@ -3,8 +3,8 @@ const app = express();
 const path = require('path'); 
 const session  = require('express-session');
 const ejsMate = require('ejs-mate');
-
 const methodOverride = require('method-override');
+
 const http = require('http'); // Required for socket.io
 const socketIo = require('socket.io'); // Import socket.io
 
@@ -28,6 +28,7 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60*  24
   },
 };
+
 app.use(session(sessionConfig));
 
 app.use(methodOverride('_method'));
@@ -44,7 +45,7 @@ app.set("io", io);
 // Mongoose connection
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb://127.0.0.1:27017/UserEmailStorage')
+mongoose.connect('mongodb://127.0.0.1:27017/WebScrapeStorage')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error(err));
 
@@ -54,6 +55,10 @@ const user_router = require('./routers/usageRouter.js');
 
 app.use('/', auth_router);
 app.use('/', user_router);
+
+//for manage CronJob running in the background
+app.locals.activeJobs = {};
+
 
 // Catch-all route for 404
 app.get("*", (req,res) => {

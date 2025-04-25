@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>App Tracking</title>
+    
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon_io/favicon.ico">
+    <link rel="stylesheet" href="/css/darkmode.css">
+
+</head>
+
+    <body>
+
+        <%- include('./layout/header')%>
+
+        <% if (typeof currentUser !== "undefined" && currentUser) { %>
+
+            <main class="main-container">
+                <h1 class="page-title">Web Scraping Service</h1>
+
+                <form id="scraping-form" class="scraping-form" action="" method="post">
+                    
+                  <div class="form-group">
+                        <a data-tooltip="Paste the URL you want to scrape"><label for="url">Website URL</label></a>
+                        <input id="url" type="text" name="url"  placeholder="https://example.com" required> 
+
+                    </div>
+
+
+
+                    <div class="dropdown-group"> 
+                      <!-- ListOfName dropdown -->
+                      <div class="dropdown">
+                        <button type="button" class="dropbtn name">
+                          Name Element Settings
+                          <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div id="nameDropdown" class="dropdown-content show">
+                          <!-- Notice data-type attribute added -->
+                          <div class="dropdown-inner" data-type="name">
+                            <select  id="option-name" name="optionName" required>
+                              <option value="" disabled selected>Element Type</option>
+                              <option value="id">ID</option>
+                              <option value="class">Class</option>
+                            </select>
+                            <input id="name" type="text" name="name" placeholder="Item/Stock Element">
+                            <!-- Container for dynamically added inputs -->
+                            <div class="dynamic-inputs-container"></div>
+                            <div class="input-controls">
+                                  <a data-tooltip="Add element name only" class="add-input">
+                                    <span>+</span>
+                                </a>
+                                  <a data-tooltip="Remove element" class="remove-input">
+                                    <span>-</span>
+                                </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- ListOfPrice dropdown -->
+                      <div class="dropdown">
+                        <button type="button" class="dropbtn price">
+                          Price Element Settings
+                          <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div id="priceDropdown" class="dropdown-content show">
+                          <!-- Notice data-type attribute added -->
+                          <div class="dropdown-inner" data-type="price">
+                            <select id="option-price" name="optionPrice" required>
+                              <option value="" disabled selected>Element Type</option>
+                              <option value="id">ID</option> 
+                              <option value="class">Class</option>
+                            </select>
+                            <input id="price" type="text" name="price" placeholder="Price Element">
+                            <!-- Container for dynamically added inputs -->
+                            <div class="dynamic-inputs-container"></div>
+                            <div class="input-controls">
+                              <a data-tooltip="Add element name only" class="add-input">
+                                <span>+</span>
+                            </a>
+                              <a data-tooltip="Remove element" class="remove-input">
+                                <span>-</span>
+                            </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Notification Email</label>
+                        <input id="email" type="email" name="email" value="<%= currentEmail %>" required disabled>
+                        <!--  placeholder="your@email.com" -->
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="btn-check" class="primary-button">
+                            Start Tracking
+                        </button>
+                    </div>
+                </form>
+            </main>
+
+            <% } else{ %>
+
+            <main class="main-container">
+                <h1 class="page-title">Web Scraping Service</h1>
+                <form id="scraping-form" class="scraping-form" action="" method="post">
+                    <div class="form-group">
+                        <a data-tooltip="Paste the URL you want to scrape">
+                            <label for="url">Website URL</label>
+                        </a>
+                        <input id="url" type="text" name="url" placeholder="https://example.com" >
+                    </div>
+
+
+
+                    <div class="dropdown-group"> 
+                      <!-- ListOfName dropdown -->
+                      <div class="dropdown">
+                        <button type="button" class="dropbtn name">
+                          Name Element Settings
+                          <span class="dropdown-arrow" data-tooltip="Click to close Element">▼</span>
+                        </button>
+                        <div id="nameDropdown" class="dropdown-content show">
+                          <!-- Notice data-type attribute added -->
+                          <div class="dropdown-inner" data-type="name">
+                            <select id="option-name" name="optionName">
+                              <option value="" disabled selected>Element Type</option>
+                              <option value="id">ID</option>
+                              <option value="class">Class</option>
+                            </select>
+                            <input id="name" type="text" name="name" placeholder="Item/Stock Element">
+                            <!-- Container for dynamically added inputs -->
+                            <div class="dynamic-inputs-container"></div>
+                            <div class="input-controls">
+                                <a data-tooltip="Add element name only" class="add-input">
+                                    <span>+</span>
+                                </a>
+                                  <a data-tooltip="Remove element" class="remove-input">
+                                    <span>-</span>
+                                </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- ListOfPrice dropdown -->
+                      <div class="dropdown">
+                        <button type="button" class="dropbtn price" >
+                          Price Element Settings
+                          <span class="dropdown-arrow" data-tooltip="Click to close Element">▼</span>
+                        </button>
+                        <div id="priceDropdown" class="dropdown-content show">
+                          <!-- Notice data-type attribute added -->
+                          <div class="dropdown-inner" data-type="price">
+                            <select id="option-price" name="optionPrice">
+                              <option value="" disabled selected>Element Type</option>
+                              <option value="id">ID</option> 
+                              <option value="class">Class</option>
+                            </select>
+                            <input id="price" type="text" name="price" placeholder="Price Element">
+                            <!-- Container for dynamically added inputs -->
+                            <div class="dynamic-inputs-container"></div>
+                            <div class="input-controls">
+                                <a data-tooltip="Add element name only" class="add-input">
+                                    <span>+</span>
+                                </a>
+                                  <a data-tooltip="Remove element" class="remove-input">
+                                    <span>-</span>
+                                </a>
+                                
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="email">Notification Email</label>
+                        <input id="email" type="email" name="email" value="trackprice@gmail.com">
+                        <!--  placeholder="your@email.com" -->
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="btn-check" class="primary-button">
+                            Start Tracking
+                        </button>
+                    </div>
+                </form>
+            </main>
+
+        <% } %>
+
+        <%- include('./layout/footer')%>
+
+        <script src="/js/index.js" ></script>
+        <script src="/js/event.js" ></script>
+
+
+    </body>
+
+</html>

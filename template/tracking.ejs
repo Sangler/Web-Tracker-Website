@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Tracking</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon_io/favicon.ico">
+    <link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+    <%- include('./layout/header')%>
+    <div class="tracking-container" >
+        <span class="back">
+            <span>T</span>
+            <span>R</span>
+            <span>A</span>
+            <span>C</span>
+            <span>K</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+        </span>
+    </div>
+
+    <br>
+    <div style="display:none;">
+        
+      <form class="main-container" action="" method="post">
+          <!-- Your initial HTML might show "undefined" or a loading message -->
+          <div class="results">
+            <div class="divs">
+                <input class="name-elms" name="item" placeholder="Loading items..." readonly>
+                <input class="price-elms" name="price" placeholder="Loading prices..." readonly>
+            </div>
+          </div>
+        </form>
+
+
+              <p id="status"><%=Expected.Status%></p>
+              <p id="result"><%=Expected.Result%></p>
+              <p id="itemIndex"><%=itemIndex%></p>
+              <p id="priceIndex"><%=priceIndex%></p>
+      </div>
+    <%- include('./layout/footer')%>
+
+    <!-- <script src="/js/index.js"></script> -->
+  <script src="/js/event.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function parseCurrency(str) {
+        try{
+          const price = str.replace(/[^0-9.]/g, '').trim();
+          if (!price) throw new Error("Empty result or All String data return!");
+          return parseFloat(price);
+        } catch (err){
+          throw new Error(`Currency parsing failed: ${error.message} (Original input: "${str}")`);
+          return `Currency parsing failed: ${error.message} (Original input: "${str}")`;
+        }
+      }
+
+      const socket = io();
+      // Ensure the channel name matches what the CronJob emits
+      const userChannel = "priceUpdate-<%=currentUser%>";
+      // console.log(userChannel);
+      socket.on(userChannel, function (data) {
+          console.log("Received updated data:", data);
+
+
+          // Get the stored indices from the DOM (or you could have them as JS variables)
+          //try-catch itemIndex && priceIndex
+          const itemIndex = Number(document.querySelector("#itemIndex").innerText);
+          const priceIndex = Number(document.querySelector("#priceIndex").innerText);
+
+          const status = document.querySelector("#status").innerText;
+          const result = Number(document.querySelector("#result").innerText);
+
+          // Check that data arrays exist and have enough elements
+          if (data.items && data.items.length > itemIndex) {
+            // Replace the h3 element with a button using outerHTML
+            document.querySelector('.name-elms').value = `${data.items[itemIndex].trim()}`;
+          } else {
+            document.querySelector('.name-elms').value = "";
+          }
+          
+          if (data.itemprices && data.itemprices.length > priceIndex) {
+            document.querySelector('.price-elms').value = `${data.itemprices[priceIndex]}`;
+          } else {
+            document.querySelector('.price-elms').value = "";
+          }
+
+
+          if(status=="rise"){
+            if(parseCurrency(data.itemprices[priceIndex])>result && document.querySelector('.price-elms').value!=""){
+                alert(`${data.items[itemIndex]} price rise above expected price!`)
+                document.querySelector(".main-container").submit();
+            }            
+          }if(status=="drop"){
+            if(parseCurrency(data.itemprices[priceIndex])<result && document.querySelector('.price-elms').value!=""){
+                alert(`${data.items[itemIndex]} price drop below expected price!`)
+                document.querySelector(".main-container").submit();
+
+            }            
+          }
+
+        });
+
+
+    });
+  </script>
+</body>
+</html>
+
+</body>
+</html>
+

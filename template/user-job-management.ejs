@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Management</title>
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="icon" type="image/x-icon" href="/imgs/favicon_io/favicon.ico" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/darkmode.css">
+
+  <style>
+    /* Table styling */
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    th, td {
+      padding: 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      word-break: break-word;
+
+    }
+
+
+    th {
+      background-color: #2c3e50;
+      color: white;
+      font-weight: 600;
+    }
+      th:nth-child(1) { min-width: 120px; }
+      th:nth-child(2) { min-width: 150px; }
+      th:nth-child(3),
+      th:nth-child(4) { min-width: 110px; }
+      td:nth-child(2) {
+        min-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Button styling */
+    button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button[type="button"],button[type="submit"] {
+      background-color: #f74f4c;
+      color: white;
+      min-width: 65px;
+
+    }
+
+
+    .back {
+      background-color: #95a5a6;
+      margin: 1rem 0;
+      display: block;
+      width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Responsive design */
+    @media screen and (max-width: 768px) {
+      table {
+        border: 0;
+        box-shadow: none;
+        table-layout: auto;
+      }
+
+      table thead {
+        display: table-header-group;
+      }
+
+      table tr {
+        display: table-row;
+        margin-bottom: 0;
+        border: none;
+        box-shadow: none;
+      }
+
+      table th {
+        background-color: #2c3e50;
+        white-space: nowrap;
+        width: auto;
+        padding: 0.8rem 1rem;
+        text-align: center;
+      }
+
+      table td {
+        display: table-cell;
+        text-align: left;
+        padding: 0.8rem;
+        border-bottom: 1px solid #ddd;
+        vertical-align: top;
+      }
+
+      table td::before {
+        display: none;
+      }
+
+      button {
+        width: auto;
+        padding: 0.5rem 1rem;
+      }
+
+    }
+
+    @media screen and (max-width: 480px) {
+      td, th {
+        padding: 0.8rem;
+      }
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li:first-child {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+
+</head>
+<body>
+  <%- include('./layout/header') %>
+
+  <h1>Manage Job</h1>
+    <table>
+      <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 60%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Current Trackers</th>
+          <th>URL</th>
+          <th>Stop</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% finishedJobs.forEach(job => { %>
+          <tr>
+            <td data-label="Current Trackers">
+              <ul>
+                <li><strong>Product:</strong> <%= job.Product %></li>
+                <li>
+                  <strong>Target:</strong>
+                  <%= job.changeStatus %> to <%= job.ExpectedTarget %>
+                </li>
+              </ul>
+            </td>
+            <td data-label="URL"><a href="<%= job.URL_Page %>"><%= job.URL_Page %></a></td>
+            <td data-label="Stop">
+              <i class="fa-solid fa-square-check"></i>
+            </td>
+            <td data-label="Status">
+              <%= job.isFinish ? 'Done' : 'Ongoing' %>
+            </td>
+          </tr>
+        <% }) %>
+
+        <% if(isRunningJob){ %>
+          <tr>
+            <td data-label="Current Trackers">
+              <ul>
+                <li><strong>Product:</strong> <%= isRunningJob.Product %></li>
+                <li>
+                  <strong>Target:</strong>
+                  <%= isRunningJob.changeStatus %> to <%= isRunningJob.ExpectedTarget %>
+                </li>
+              </ul>
+            </td>
+            <td data-label="URL"><a href="<%= isRunningJob.URL_Page %>"><%= isRunningJob.URL_Page %></a></td>
+              <form action="" method="post">
+
+                        <td data-label="Stop">
+                          <button class="jobControl" type="button"><i class="fa-solid fa-hourglass-half"></i></button>
+                        </td>
+              </form>
+            <td data-label="Status">Ongoing</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+
+  <div>
+    <button type="button" class="back">Back To Mainpage</button>
+  </div>
+
+  <%- include('./layout/footer') %>
+
+  <script src="/js/event.js"></script>
+  <script type="text/javascript">
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector(".jobControl").addEventListener('click', (evt)=>{
+            evt.preventDefault();
+            if (window.confirm("Do you want to delete current tracker?")) {
+               document.querySelector("form").submit();
+            }
+
+        })
+      })
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 module.exports= {
 	sessions:{
-		secret: 'this-should-be-a-better-secret!',
+		secret: 'this-should-be-a-better-secret-so-noone-can-access!',
 	},
 	email:{
 		user: "webtracking@gmx.com",

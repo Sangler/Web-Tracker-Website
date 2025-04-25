@@ -1,0 +1,31 @@
+/* General Dark theme */
+
+.dark-theme {
+  color: #ffffff;
+  background-color: #333333;
+}
+.dark-theme h1,h2{  background: -webkit-linear-gradient(#999, #61ca7a, #c3ca61);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;}
+.dark-theme a:hover {
+  color: #00aaff;
+}
+
+.dark-theme button {
+  background-color: #555555;
+}
+.dark-theme .back{
+    background-color: #2f6f59;
+}
+
+.dark-theme input{
+  background-color: #e8ffef;
+}
+
+.dark-theme td{
+    color: darkgreen   ;
+}
+
+.dark-theme th{
+    color:   paleturquoise  ;
+}

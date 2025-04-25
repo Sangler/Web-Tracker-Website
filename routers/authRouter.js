@@ -5,8 +5,10 @@ const Sha256 = require("sha256");
 const User = require('../models/emails.js');
 
 const catchAsync = require('../utils/catchAsync.js');
-const isValidEmail = require('../utils/emailVerified.js');
+const isValidEmail = require('../utils/emailRegister.js');
+
 const keys = require('../utils/process-env.js');
+const path = require('path');
 
 //Set up Nodemailer
 const nodemailer = require("nodemailer");
@@ -49,24 +51,86 @@ async function SendVerifiedCode(otpcode, email) {
 
 //HTTP GET requests
 router.get('/', (req,res)=>{
-    res.render('./auth/login.ejs');
+    if (!req.session.email) {
+      res.render('./mainpage.ejs');
+  }
+
+  if (req.session.email && req.session.username) {
+      return res.redirect(`/trackery/${req.session.email.split("@")[0]}`);
+  }
   });
 
 router.get('/login', (req,res)=>{
-      res.render('./auth/login.ejs');
-  });
-
-router.get('/register',(req,res)=>{ 
-    res.render('./auth/register.ejs');
+  if (!req.session.email) {
+      return res.render('./auth/login.ejs');
+  }
+  if (req.session.email && req.session.username) {
+      return res.redirect(`/trackery/${req.session.email.split("@")[0]}`);
+  }
+  res.render('./auth/login.ejs');  
 });
 
-router.get('/register/otp',isValidEmail,(req,res)=>{ 
+router.get('/logout', (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).send("Failed to log out");
+      }
+      return res.redirect('/login'); 
+    });
+  } else {
+    return res.redirect('/login'); 
+  }
+
+
+});
+
+router.get('/register', (req,res)=>{ 
   if (!req.session.email) {
+    return res.render('./auth/register.ejs');
+  }
+  if (req.session.email && req.session.username) {
+      return res.redirect(`/trackery/${req.session.email.split("@")[0]}`);
+  }
+  res.render('./auth/register.ejs');
+
+});
+
+router.get('/register/otp',isValidEmail, async(req,res)=>{ 
+  if (!req.session.email ) {
     return res.redirect('/register');
+  }
+  if(req.session.emailStatus==true){
+    return res.redirect(`/trackery/${req.session.email.split("@")[0]}`);
+  }
+  //For unregistered user
+  if (req.session.email && req.session.username && req.session.user_id) {
+    return res.render('./auth/otp.ejs');
   }
   res.render('./auth/otp.ejs');
 });
 
+
+//Others Sub-routers
+router.get('/webs-tracking-logo-ulz93js8cvk48avh',(req,res)=>{
+  //using path, be careful with relatives path !!!
+  res.sendFile(path.join(__dirname,'../static/imgs/webs-tracking-logo.jpg'))
+})
+
+router.get('/donation',(req,res)=>{ 
+  return res.render('./subpages/donate.ejs');
+});
+
+
+router.get('/HowToTrack',(req,res)=>{
+  return res.render('./subpages/instruction.ejs')
+})
+
+
+router.get('/test',(req,res)=>{
+  return res.render('./mainpage-test.ejs')
+})
 
 
 //HTTP POST requests
@@ -125,8 +189,13 @@ router.post('/register/otp',catchAsync(async (req,res)=>{
     if (String(otp) === String(IsUserEmail.otp)) { //Check otp code
       IsUserEmail.verified = true;
       await IsUserEmail.save();
+
       req.session.user_id = IsUserEmail._id;
-      return res.redirect(`/trackery/${IsUserEmail.username}`); // Redirect on success
+      req.session.username = IsUserEmail.username;
+      req.session.email = IsUserEmail.email;  
+      req.session.emailStatus=IsUserEmail.verified;
+
+      return res.redirect(`/trackery/${IsUserEmail.email.split("@")[0]}`); // Redirect on success
     } else {
       const otpMsg = { message: "Invalid OTP Code" };
       return res.render('./layout/error.ejs', { otpMsg });
@@ -172,8 +241,15 @@ router.post('/login',catchAsync(async (req,res)=>{
   req.session.user_id = IsUserEmail._id;
   req.session.username = IsUserEmail.username;
   req.session.email = IsUserEmail.email;  
+  req.session.emailStatus=IsUserEmail.verified;
+  console.log(Sha256(IsUserEmail.username));
   res.redirect(`/trackery/${IsUserEmail.email.split("@")[0]}`);
 }));
+
+router.post('/', (req,res)=>{
+
+  res.redirect('/login');
+});
 
 
 module.exports = router;

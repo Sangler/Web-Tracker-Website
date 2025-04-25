@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>App Tracking</title>
+
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon_io/favicon.ico">
+    <link rel="stylesheet" href="/css/darkmode.css">
 </head>
 <body>
+  
     <%- include('./layout/header')%>
 
-	<main class="main-container">
-		<form id="scraping-form" class="scraping-form" action="" method="post">
+  <main class="main-container">
+    <div id="scraping-form" class="scraping-form">
   <% if ((itemprices && items) && (itemprices.length>0 && items.length>0) && (items != "undefined" && itemprices != "undefined")) { %>    
     <div class="results">
   <div class="divs">
@@ -36,7 +41,8 @@
     <div class="results">
       <div class="divs"> 
         <div class="name-elms">
-          <h3>Cannot find element from your "ID" or Class"</h3>
+              <h3>Cannot find element from your "ID" or Class"</h3>
+              <p>Kindly wait 2-3 minutes or check you URL Link</p>
         </div>
         <div class="price-elms">
           <% if (itemprices.length === 1) { %>
@@ -70,7 +76,8 @@
           <% } %>
         </div>
         <div class="price-elms">
-          <h3>Cannot find element from your "ID" or Class"</h3>
+              <h3>Cannot find element from your "ID" or Class"</h3>
+              <p>Kindly wait 2-3 minutes or check you URL Link</p>
         </div>
       </div>
     </div>
@@ -78,108 +85,324 @@
     <div class="results">
       <div class="divs"> 
         <div class="name-elms">
-          <h3>Cannot find element from your "ID" or Class"</h3>
+              <h3>Cannot find element from your "ID" or Class"</h3>
+              <p>Kindly wait 2-3 minutes or check you URL Link</p>
         </div>
         <div class="price-elms">
-          <h3>Cannot find element from your "ID" or Class"</h3>
+              <h3>Cannot find element from your "ID" or Class"</h3>
+              <p>Kindly wait 2-3 minutes or check you URL Link</p>
         </div>
       </div>
     </div>
   <% } %>
-  <div class="form-actions">
-    <button type="submit" id="btn-check" class="primary-button">Confirm my choice(s)</button>
-  </div>
-</form>
-
-	</main>
 
 
-    <main class="main-container sendEmail">
-        <h3 class="page-title">Sending Email Notification</h1>
-        <form id="scraping-form" class="scraping-form" action="" method="">
-            <div class="form-group">
-                <label for="url">Tracking Website Link</label>
-                <input id="url" type="text" name="url" placeholder="https://example.com" required>
+          <div class="alert-settings">
+            <div class="alert-option">
+            <div class="checkbox-group">
+                <div class="squaredThree">
+                    <input type="checkbox" id="price-drop" name="drop" value="drop" disabled>
+                    <label for="price-drop"></label>
+                </div>
+                <a data-tooltip="Expected target will be sent to your email">
+                    <label for="price-drop">Notify when price drops below:</label>
+                </a>
+                <!-- RegEx check for numbers -->
+                <!-- Number Front-End formats validation -->
+                <input type="number" id="drop-input" name="userDropOutput" inputmode="decimal"
+                  placeholder='Enter number or decimal only' pattern="^\d{1,10}(\.\d{1,10})?([eE][+-]?\d+)?$"
+                  title= '(e.g. "123.4567", "0.123", "123"'>
+
+<!-- ^^\d{1,10}(?:\.\d{1,10})?$ -->
             </div>
-
-            <div class="form-group">
-                <label for="text">Notification Email</label>
-                <input id="text" type="text" name="content" placeholder="The price is droping to blah blah blah..." required>
-            </div>
-
             
-            <div class="form-group">
-                <label for="email">Notification Email</label>
-                <input id="email" type="email" name="email" value="<%= currentEmail %>" required disabled>
-            <!--  placeholder="your@email.com" -->
+            <div class="checkbox-group">
+                <div class="squaredThree">
+                    <input type="checkbox" id="price-rise" name="rise" value="rise" disabled>
+                    <label for="price-rise"></label>
+                </div>
+                <a data-tooltip="Expected target will be sent to your email">
+                    <label for="price-rise">Notify when price rises above:</label>
+                </a>
+                <!-- RegEx check for numbers -->
+                <!-- Number Front-End formats validation -->
+                <input type="number" id="rise-input" name="userRiseOutput" inputmode="decimal"
+                  placeholder='Enter number or decimal only' pattern="^\d{1,10}(\.\d{1,10})?([eE][+-]?\d+)?$"
+                  title= '(e.g. "123.4567", "0.123", "123"' />
             </div>
+        </div>
 
-            <div class="form-actions">
-                <button type="submit" id="btn-check" class="primary-button">
-                    Send Email!
-                </button>
-            </div>
-        </form>
-    </main>
+    </div>
+      
+
+      <div class="form-actions">
+        <button type="submit" id="btn-userChoice" class="primary-button">Confirm my choice(s)</button>
+        <!-- The confirm button will update the email notification textarea below -->
+      </div>
+    </div>
+  </main>
+
+  <main class="main-container sendEmail">
+    <h3 class="page-title">Sending Email Notification</h3>
+    <form id="email-form" class="scraping-form" action="" method="post">
+      
+      <div class="form-group">
+        <label for="url">Tracking Website Link</label>
+        <input id="url" type="text" name="url" placeholder="https://example.com" required value="<%= user_url %>">
+      </div>
+
+      <div class="form-group">
+        <label for="text">Notification Email</label>
+        <input id="text" type="text" name="content" placeholder="your-email-address@gmail.com" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="emailNotification">Notification Email</label>
+        <!-- This textarea will be updated with the selected item and price -->
+        <textarea rows="4" cols="50" id="emailNotification" name="userNoteToMail" required></textarea>
+      </div>
+
+      <div style="display: ;">
+        <input id="items" type="number" name="itemIndex" value="">
+        <input id="itemprices" type="number" name="priceIndex" value="">
+        <input id="change" name="change" value="">
+        <input id="priceChange" type="number" name="priceChange" value="">
+        <input id="productName" type="text" name="productName" value="">
+
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" id="btn-check" class="primary-button">Send Email!</button>
+      </div>
+
+    </form>
+  </main>
+
 
 		<%- include('./layout/footer')%>
 
 	<script src="/socket.io/socket.io.js"></script>
 
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function () {
-  const socket = io(); // Connect to WebSocket server
-  const userChannel = "priceUpdate-<%=currentUser%>";
-  // console.log(userChannel) socket.io channel
-  socket.on(userChannel, function (data) {
-    console.log('Received updated prices:', data);
-    
-    // Check that items and itemprices are valid arrays with at least one element
-    if (data.items && data.itemprices && data.items.length > 0 && data.itemprices.length > 0) {
-      // Update the innerHTML first
-      document.querySelector('.name-elms').innerHTML = data.items.map((item, index) =>
-        `<button type="button" class="btnName" data-index="${index}">
-           <span>${index + 1}. ${item}</span>
-         </button>`).join('');
-  
-      document.querySelector('.price-elms').innerHTML = data.itemprices.map((price, index) =>
-        `<button type="button" class="btnPrice" data-index="${index}">
-           <span>${index + 1}. ${price}</span>
-         </button>`).join('');
-  
-      // Attach click event listeners to the newly created buttons
-      document.querySelectorAll('.btnPrice').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.btnPrice').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
-  
-      document.querySelectorAll('.btnName').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.btnName').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
-    } else {
-      // If either array is missing or empty, show fallback messages
-      document.querySelector('.name-elms').innerHTML = "<h3>Cannot find element from your 'ID' or Class</h3>";
-      document.querySelector('.price-elms').innerHTML = "<h3>Cannot find element from your 'ID' or Class</h3>";
-    }
-  });
-  
-  socket.on('connect', function () {
-    console.log("Connected to WebSocket server.");
-  });
-  
-  socket.on('disconnect', function () {
-    console.log("Disconnected from WebSocket server.");
-  });
-});
+  var itemsArr = []; 
+  var itempricesArr = [];
+  var currentEmail = "<%= currentEmail %>";
+  var itemChoice = null;
+  var itempriceChoice = null;
+
+
 </script>
+
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const socket = io(); 
+    const userChannel = "priceUpdate-<%=currentUser%>";
+    // console.log(userChannel);
+
+    // socket.io channel emit
+    socket.on(userChannel, function (data) {
+      console.log('Received updated prices:', data, "at ",Date.now());
+
+    
+      /* Element references */
+      const dropCheckbox = document.getElementById("price-drop");
+      const riseCheckbox = document.getElementById("price-rise");
+      const dropInput    = document.getElementById("drop-input");
+      const riseInput    = document.getElementById("rise-input");
+
+      const change = document.getElementById("change");
+      const priceChange  = document.getElementById("priceChange");
+
+
+      /* Toggle handler */
+      function toggleInputs(e) {
+        // Reset both inputs and the hidden 'change' field
+        dropInput.style.display = "none";
+        dropInput.required = false;
+        riseInput.style.display = "none";
+        riseInput.required = false;
+
+        if (e.target === dropCheckbox) {
+          riseCheckbox.checked = false;
+          if (dropCheckbox.checked) {
+            dropInput.style.display = "inline-block";
+            dropInput.required = true;
+          }
+        } else if (e.target === riseCheckbox) {
+          dropCheckbox.checked = false;
+          if (riseCheckbox.checked) {
+            riseInput.style.display = "inline-block";
+            riseInput.required = true;
+          }
+        }
+      }
+      /* Event listeners */
+      dropCheckbox.addEventListener("change", toggleInputs);
+      riseCheckbox.addEventListener("change", toggleInputs);
+
+
+      // Check that items and itemprices are valid arrays with at least one element
+      if (data.items && data.itemprices  && data.items.length > 0 && data.itemprices.length > 0 && (data.itemprices!="undefined"||data.items!="undefined")) {
+        // assign global variable
+        itemsArr = data.items;
+        itempricesArr = data.itemprices;
+        document.querySelector('.name-elms').innerHTML = data.items.map((item, index) =>
+          `<button type="button" class="btnName" data-index="${index}">
+             <span>${index + 1}. ${item}</span>
+           </button>`).join('');
+    
+        document.querySelector('.price-elms').innerHTML = data.itemprices.map((price, index) =>
+          `<button type="button" class="btnPrice" data-index="${index}">
+             <span>${index + 1}. ${price}</span>
+           </button>`).join('');
+    
+        // Attach click event listeners to the newly created buttons
+        document.querySelectorAll('.btnPrice').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.btnPrice').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+    
+        document.querySelectorAll('.btnName').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.btnName').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+
+        //remove disable feature from 2 checkbox here:
+          dropCheckbox.disabled = false;
+          riseCheckbox.disabled = false;
+        /**/
+           // For Name buttons:
+            const nameButtons = document.querySelectorAll('.btnName');
+            nameButtons.forEach(btn => {
+              btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                nameButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const activeIndex = this.getAttribute('data-index'); 
+                // console.log('Active Name Button data-index:', activeIndex);
+              });
+            });
+
+            // For Price buttons:
+            const priceButtons = document.querySelectorAll('.btnPrice');
+            priceButtons.forEach(btn => {
+              btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                priceButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const activeIndex = this.getAttribute('data-index'); 
+                // console.log('Active Price Button data-index:', activeIndex);
+              });
+            });
+            
+           
+
+            document.getElementById('btn-userChoice').addEventListener('click', function(e) {
+              e.preventDefault();
+              var activeNameBtn = document.querySelector('.btnName.active');
+              var activePriceBtn = document.querySelector('.btnPrice.active');
+              
+               if (dropCheckbox.checked) {
+                  change.value = "drop";
+                  priceChange.value = dropInput.value;
+                } else if (riseCheckbox.checked) {
+                  change.value = "rise";
+                  priceChange.value = riseInput.value;
+                } else {
+                  // If neither checkbox is selected, clear the values
+                  change.value = "";
+                  priceChange.value = "";
+                }
+
+              // Optional: Log the values for debugging
+  
+
+              if (!activeNameBtn || !activePriceBtn) {
+                alert('Please select both an item and a price.');
+                return;
+              } 
+            
+              var nameIndex = activeNameBtn.getAttribute('data-index');
+              // Optionally: if you expect the indices to match, you can compare them.
+              // For now, we use nameIndex.
+              var priceIndex = activePriceBtn.getAttribute('data-index');
+              // Retrieve the selections from the global arrays.
+              itemChoice = itemsArr[nameIndex];
+              itempriceChoice = itempricesArr[priceIndex];
+
+              // Get reference to inputs
+
+              var message =""
+              // Set values
+              document.querySelector("#items").value = nameIndex;
+              document.querySelector("#itemprices").value = priceIndex;
+              document.querySelector("#productName").value=itemChoice.trim()
+
+
+              if(priceChange.value=="" || change.value==""){
+                // var message = `Hi ${currentEmail}, ${itemChoice} is: ${itempriceChoice} \n` ;
+                alert("Please select target price before continue!");     
+                return;             
+              } else if(priceChange && change){
+                var message = `Hi ${currentEmail}, ${itemChoice} is: ${itempriceChoice} \nThe target expected to `+`${change.value}` +` to ${priceChange.value}` ;                
+              }
+
+              document.getElementById('emailNotification').value = message;
+            });
+
+
+            /*document.querySelector("#btn-check").addEventListener("click", (evt)=>{
+                  evt.preventDefault()
+                  //Price & Price changes Validation
+                  if(change && priceChange){
+                    document.querySelector("#email-form").submit();
+                  } else{
+                    alert("Please fill Drop/Rise price input to continue trackking process!")
+                    return;
+                  }
+
+            })
+            */
+
+
+      } else {
+        // If either array is missing or empty, show err fallback messages
+        setTimeout(() => {
+
+          document.querySelector('.name-elms').innerHTML = "<h3>Cannot find element from your 'ID' or 'Class'</h3>";
+          document.querySelector('.price-elms').innerHTML = "<h3>Cannot find element from your 'ID' or 'Class'</h3>";
+
+        alert("Please check your element from previous page!")
+        document.querySelector('.scraping-form').innerHTML = "<button onclick='window.history.back()'>BACK</button>";
+        console.log("Delayed for 5 mins.");
+        }, `${1000*60*5}`);
+      }
+
+
+    });
+    
+    socket.on('connect', function () {
+      console.log("Connected to WebSocket server.");
+    });
+    
+    socket.on('disconnect', function () {
+      console.log("Disconnected from WebSocket server.");
+    });
+  });
+
+</script>
+
+<script src="/js/event.js"></script>
+<!-- <script src="/js/index.js" ></script> -->
 
 
 </body>
 </html>
+ 

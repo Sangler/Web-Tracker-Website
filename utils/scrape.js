@@ -2,25 +2,52 @@ const puppeteer = require('puppeteer');
 const CronJob = require('cron').CronJob;
 const nodemailer = require('nodemailer');
 const cheerio = require('cheerio');
+const Sha256 = require("sha256");
 
 async function configureBrowser(url) {
-    const browser = await puppeteer.launch({ headless: false }); // Set headless to false for debugging
-    const page = await browser.newPage();
-    await page.goto(url);
-    return page;
+  let browser;
+  try {
+      browser = await puppeteer.launch({ headless: false });
+      const page = await browser.newPage();
+      const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+
+      if (response && response.status() >= 400 && response.status() <= 499) {
+          await browser.close();
+          return { 
+              error: true,
+              status: response.status(),
+              details: `HTTP Error ${response.status()}`
+          };
+      }
+
+      return page;
+  } catch (error) {
+      if (browser) await browser.close();
+      return { 
+          error: true,
+          details: error.message,
+          status: error.message.includes('ERR_NAME_NOT_RESOLVED') ? 400 : 500
+      };
+  }
 }
 
+function generateJobID(username){
+  const rand = Math.floor(100000 + Math.random() * 900000);
+  const randID= `${username}_${rand.toString()}`
+  return Sha256(randID)
+}
+
+
 function escapeCssSelector(selector) {
-// This regex matches most characters that need escaping in a CSS selector.
+// This regex to escape special characters in selectors.
 	//return (`${selector.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^{|}~])/g, '\\$1').split(' ').join('.')}`); OLD CODE
-	return selector
-    .trim()// Remove any leading or trailing spaces
+	return selector.trim()// Remove any leading or trailing spaces
     .replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^{|}~])/g, '\\$1')
     .split(/\s+/)// Split on one or more whitespace characters
     .join('.');
 }
 
-async function checkPrice(page, UserSelector, userEleTypeChoice) {
+async function checkPrice(page, UserSelector, userEleTypeChoice, listOfElements) {
     try {
     await page.reload({ waitUntil: 'domcontentloaded' });
       const html = await page.evaluate(() => document.body.innerHTML);
@@ -36,19 +63,26 @@ async function checkPrice(page, UserSelector, userEleTypeChoice) {
       locationSelector='#'+escapeCssSelector(UserSelector);
     }
     let suggestion=locationSelector;
-      console.log(locationSelector);
+
+    if(listOfElements && listOfElements.length>0){
+      for(let i=0;i<listOfElements.length;i++){
+        console.log(i, listOfElements[i])
+        suggestion=suggestion+ " "+ listOfElements[i]
+      }
+    }
+    console.log(suggestion);
   
-    const elementsArray = $(locationSelector).toArray();
+    const elementsArray = $(suggestion).toArray();
     console.log("first array length: ",elementsArray.length)
     
     
     //This will display to User UI and let User make a choice for element!
-    const elements = $(locationSelector, html);
+    const elements = $(suggestion, html);
     const elementRes=[];
-  // 2 returns condition
-	if(elements.length ==1  ){
-    elementRes.push(elements.text().trim());
-		return elementRes
+    // 2 returns condition
+    if(elements.length ==1  ){
+      elementRes.push(elements.text().trim());
+      return elementRes
 
 	}
 	  
@@ -59,15 +93,15 @@ async function checkPrice(page, UserSelector, userEleTypeChoice) {
         elementRes.push(dollarPrice);
       }
 	  return elementRes
-    } else{return ;}
+    } else{return "undefined";}
 
     } catch (error) {
       console.error("Error checking price:", error);
     }
 }
 
-
-async function DoubleCheckPrice(page, UserSelector, userEleTypeChoice,UserChoice) {
+/*
+async function DoubleCheckPrice(page, UserSelector, userEleTypeChoice, listOfElements, UserChoice) {
   try {
 	await page.reload({ waitUntil: 'domcontentloaded' });
     const html = await page.evaluate(() => document.body.innerHTML);
@@ -83,7 +117,14 @@ async function DoubleCheckPrice(page, UserSelector, userEleTypeChoice,UserChoice
 		locationSelector='#'+escapeCssSelector(UserSelector);
 	}
 	let suggestion=locationSelector;
-    console.log(locationSelector);
+
+  if(listOfElements.length>0){
+    for(let i=0;i<listOfElements.length;i++){
+      console.log(i, listOfElements[i])
+      suggestion+ " "+ listOfElements[i]
+    }
+  }
+  console.log(suggestion);
 
 	const elementsArray = $(locationSelector).toArray();
 	console.log("first array length: ",elementsArray.length)
@@ -141,98 +182,90 @@ async function DoubleCheckPrice(page, UserSelector, userEleTypeChoice,UserChoice
     console.error("Error checking price:", error);
   }
 }
+  */
 
+async function sendNotification(email, url, name, changeOutput, changeStatus) {
+  let transporter = nodemailer.createTransport({
+    host: 'mail.gmx.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'webtracking@gmx.com',
+      pass: 'webscraping2025'
+    }
+  });
+
+  // Styled email template
+  const emailStyle = `
+    <style>
+      .container { max-width: 600px; margin: 20px auto; padding: 20px; font-family: Arial, sans-serif; }
+      .header { background: #f8f9fa; padding: 20px; border-radius: 10px 10px 0 0; }
+      .content { padding: 30px 20px; background: #ffffff; }
+      .price-change { color: #2c3e50; font-size: 18px; margin: 15px 0; }
+      .cta-button { 
+        display: inline-block; 
+        padding: 12px 25px;
+        background-color: #3498db; 
+        color: white !important; 
+        text-decoration: none; 
+        border-radius: 5px; 
+        margin: 20px 0;
+      }
+      .footer { 
+        margin-top: 30px; 
+        padding-top: 20px; 
+        border-top: 1px solid #eeeeee; 
+        color: #7f8c8d; 
+        font-size: 12px;
+      }
+    </style>
+  `;
+
+  const emailTemplate = `
+    <div class="container">
+      <div class="header">
+        <img src="https://example.com/logo.png" alt="Price Tracker Logo" width="150">
+      </div>
+      <div class="content">
+        <h2 style="color: #2c3e50;">Hello there,</h2>
+        <p class="price-change">
+          The price of <strong>${name}</strong> has 
+          <span style="color: ${changeStatus=='drop' ? '#e74c3c' : '#2ecc71'}; font-weight: bold;">
+            ${changeStatus}
+          </span> 
+          to <strong>${changeOutput}</strong>
+        </p>
+        <p style="color: #7f8c8d;">Check out the latest price now:</p>
+        <a href="${url}" class="cta-button">View Product</a>
+        <p style="color: #7f8c8d; font-size: 14px;">
+          This is an automated notification from Price Tracker service.
+        </p>
+      </div>
+      <div class="footer">
+        <p>🔔 The email you receive due to your subscription to price alerts</p>
+        <p>© ${new Date().getFullYear()} Price Tracker. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  let info = await transporter.sendMail({
+    from: `"App Tracker" <webtracking@gmx.com>`,
+    to: email,
+    subject: `Changes Alert! ${name} ${changeStatus} to ${changeOutput}`,
+    text: `Hello, the price of ${name} just ${changeStatus} to ${changeOutput}. Check here: ${url}`,
+    html: emailStyle + emailTemplate
+  });
+
+  console.log("Message sent: %s", info.messageId);
+}
 
 
 module.exports = {
 	configureBrowser,
 	escapeCssSelector,
 	checkPrice,
-	DoubleCheckPrice
+  sendNotification,
+  parseCurrency,
+  generateJobID
   };
 
-async function sendNotificatioication(price) {
-
-    let transporter = nodemailer.createTransport({
-      host: 'mail.gmx.com',
-      port: 587,
-      secure: true,
-      auth: {
-          user: 'webtracking@gmx.com',
-          pass: 'webscraping2025'
-      }
-    });
-	/*let change;
-	if(change=='drop'){
-		
-	} else if (change =='rise'){
-		
-	}*/
-	
-    let textToSend = 'Current price ' + price;
-    let htmlText = `<a href=\"${url}\">Link</a>`;
-  
-    let info = await transporter.sendMail({
-      from: '"Price Tracker" <*****@gmail.com>',
-      to: "*****@gmail.com",    
-      subject: 'Price dropped to ' + price, 
-      text: textToSend,
-      html: htmlText
-    });
-  
-    console.log("Message sent: %s", info.messageId);
-}
-	/*
-	//This will display to User UI and let User make a choice for element!
-	const elements = $(locationSelector, html);
-	if(elements.length >1 && ){
-		for (let index = 0; index < elements.length; index++) {
-			let dollarPrice = elements.eq(index).text();
-			console.log(index, dollarPrice);
-		}
-	}
-	*/ 	
-	
-
-// async function startTracking() {
-//     const page = await configureBrowser(url1);
-//     let job = new CronJob('*/1 * * * *', function() { //runs every 1 minute in this config
-	
-// 	async function getResults() {
-// 		let price = await checkPrice(page, UserSelector1, 'class',1);
-// 		let item = await checkPrice(page, Selector, 'class',1);
-// 		console.log("\n")
-// 		console.log(`${item} : ${price}`,"\n");
-
-// 	}
-// 	getResults();
-
-//     }, null, true, null, null, true);
-//     job.start();
-
-// }
-
-
-/*
-
-<% let itemsArray = Array.isArray(items) ? items : [items]; %>
-    	
-  <% if (items && (Array.isArray(items) ? items.length > 0 : true)) { %>
-    <% let itemsArray = Array.isArray(items) ? items : [items]; %>
-    <% if (itemsArray.length === 1) { %>
-      <button type="button" class="btnName" data-index="0">
-        <span>Only 1 item: <%= itemsArray[0] %></span>
-      </button>
-    <% } else { %>
-      <% itemsArray.forEach((item, i) => { %>
-        <button type="button" class="btnName" data-index="<%= i %>">
-          <span><%= i + 1 %>. <%= item %></span>
-        </button>
-      <% }); %>
-    <% } %>
-  <% } else { %>
-    <h3>Cannot find element from your "ID" or Class"</h3>
-  <% } %>
-</div>
-
-*/
